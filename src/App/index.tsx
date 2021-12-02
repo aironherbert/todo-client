@@ -83,7 +83,7 @@ export default function App() {
   const [deleteTodo] = useMutation(DELETE_TODO, { refetchQueries: [GET_TODOS, "todos"] });
   const [updateTodo] = useMutation(UPDATE_TODO);
 
-  const [status, setStatus] = useState("");
+  const [state, setState] = useState("");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [color, setColor] = useState("#000000");
@@ -104,6 +104,7 @@ export default function App() {
     setTitle("");
     setDescription("");
     setColor("#000000")
+    setState("")
   }
 
   if (loading) return <p>Loading...</p>;
@@ -111,15 +112,15 @@ export default function App() {
   return (
     <div className="container">
       <div style={{ display: "flex", flexDirection: "column" }}>
-        <Button variant="contained" style={{ marginBottom: "5px" }} onClick={() => setStatus(status === "create" ? "" : "create")}>{status === "create" ? "Fechar" : "Criar nova atividade"}</Button>
-        {status === "create" &&
+        <Button variant="contained" style={{ marginBottom: "5px" }} onClick={() => setState(state === "create" ? "" : "create")}>{state === "create" ? "Fechar" : "Criar nova atividade"}</Button>
+        {state === "create" &&
           <Card className="create" style={{ display: "flex", justifyContent: "flex-start" }}>
             <form onSubmit={(event) => {
               event.preventDefault();
               handleCreate();
             }}>
               <label>
-                <TextField autoFocus type="text" name="title" placeholder="Título" value={title} onChange={(e) => setTitle(e.target.value)} />
+                <TextField size="small" autoFocus type="text" name="title" placeholder="Título" value={title} onChange={(e) => setTitle(e.target.value)} />
               </label>
               <label>
                 <TextField multiline fullWidth type="text" name="description" placeholder="Descrição" value={description} onChange={(e) => setDescription(e.target.value)} />
@@ -133,16 +134,16 @@ export default function App() {
         }
       </div>
       {data?.todos.map((todo: Todo) =>
-        <Card key={todo.id} style={{ backgroundColor: todo.color, display: "flex", minWidth: "50%", borderRadius: "10px", justifyContent: "space-between", alignItems: "center", padding: "10px", position: "relative", marginBottom: "5px" }}>
+        <Card key={todo.id} style={{ backgroundColor: todo.color, display: "flex", minWidth: "50%", borderRadius: "10px", justifyContent: "space-between", alignItems: "center", padding: "10px", position: "relative", marginBottom: "5px", opacity: `${todo.done ? "0.5" : "1"}` }}>
           <div style={{ backgroundColor: "white", borderRadius: "10px", width: "100%", padding: "2px", marginRight: "5px" }}>
-            {status === "edit" && todo.id === selected.id ? <>
+            {state === "edit" && todo.id === selected.id ? <>
               <form className="edit" onSubmit={async (event) => {
                 event.preventDefault();
                 await updateTodo({
                   variables: {
                     ...selected
                   }
-                }).then(() => setStatus("")).catch(err => console.log(err));
+                }).then(() => setState("")).catch(err => console.log(err));
               }}>
                 <div className="labels">
                   <TextField fullWidth size="small" autoFocus className="input1" type="text" name="title" value={selected.title} onChange={(e) => setSelected({ ...selected, title: e.target.value })} />
@@ -161,7 +162,7 @@ export default function App() {
           <div style={{ display: "flex" }}>
             <button onClick={async () => {
               setSelected({ id: todo.id, title: todo.title, description: todo.description, color: todo.color, done: todo.done });
-              setStatus(status === "edit" ? "" : "edit");
+              setState(state === "edit" ? "" : "edit");
             }}><EditIcon /></button>
             <button onClick={async () => {
               await updateTodo({ variables: { id: todo.id, done: !todo.done } })

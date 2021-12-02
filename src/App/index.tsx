@@ -4,6 +4,8 @@ import EditIcon from '@material-ui/icons/Edit';
 import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@material-ui/icons/CheckBox';
 import DeleteIcon from '@material-ui/icons/Delete';
+import { Button, Card, TextField } from '@material-ui/core';
+
 import "./index.css";
 // import styled from '@emotion/styled';
 
@@ -109,30 +111,30 @@ export default function App() {
   return (
     <div className="container">
       <div style={{ display: "flex", flexDirection: "column" }}>
-        <button style={{ marginBottom: "5px" }} onClick={() => setStatus(status === "create" ? "" : "create")}>{status === "create" ? "Fechar" : "Criar nova atividade"}</button>
+        <Button variant="contained" style={{ marginBottom: "5px" }} onClick={() => setStatus(status === "create" ? "" : "create")}>{status === "create" ? "Fechar" : "Criar nova atividade"}</Button>
         {status === "create" &&
-          <div className="create" style={{ display: "flex", justifyContent: "flex-start" }}>
+          <Card className="create" style={{ display: "flex", justifyContent: "flex-start" }}>
             <form onSubmit={(event) => {
               event.preventDefault();
               handleCreate();
             }}>
               <label>
-                <input autoFocus type="text" name="title" placeholder="Título" value={title} onChange={(e) => setTitle(e.target.value)} />
+                <TextField autoFocus type="text" name="title" placeholder="Título" value={title} onChange={(e) => setTitle(e.target.value)} />
               </label>
               <label>
-                <input type="text" name="description" placeholder="Descrição" value={description} onChange={(e) => setDescription(e.target.value)} />
+                <TextField multiline fullWidth type="text" name="description" placeholder="Descrição" value={description} onChange={(e) => setDescription(e.target.value)} />
               </label>
               <label>
-                <input type="color" value={color} onChange={(e) => setColor(e.target.value)} />
+                <input style={{ height: "3.5rem" }} type="color" value={color} onChange={(e) => setColor(e.target.value)} />
               </label>
-              <button type="submit">Salvar</button>
+              <Button variant="contained" type="submit">Salvar</Button>
             </form>
-          </div>
+          </Card>
         }
       </div>
       {data?.todos.map((todo: Todo) =>
-        <div key={todo.id} style={{ backgroundColor: todo.color, display: "flex", minWidth: "50%", borderRadius: "10px", justifyContent: "space-between", alignItems: "center", padding: "10px", position: "relative", marginBottom: "5px" }}>
-          <div style={{ backgroundColor: "white", borderRadius: "10px", width: "100%", padding: "2px" }}>
+        <Card key={todo.id} style={{ backgroundColor: todo.color, display: "flex", minWidth: "50%", borderRadius: "10px", justifyContent: "space-between", alignItems: "center", padding: "10px", position: "relative", marginBottom: "5px" }}>
+          <div style={{ backgroundColor: "white", borderRadius: "10px", width: "100%", padding: "2px", marginRight: "5px" }}>
             {status === "edit" && todo.id === selected.id ? <>
               <form className="edit" onSubmit={async (event) => {
                 event.preventDefault();
@@ -143,10 +145,10 @@ export default function App() {
                 }).then(() => setStatus("")).catch(err => console.log(err));
               }}>
                 <div className="labels">
-                  <input autoFocus className="input1" type="text" name="title" value={selected.title} onChange={(e) => setSelected({ ...selected, title: e.target.value })} />
-                  <input className="input2" type="text" name="description" value={selected.description} onChange={(e) => setSelected({ ...selected, description: e.target.value })} />
+                  <TextField fullWidth size="small" autoFocus className="input1" type="text" name="title" value={selected.title} onChange={(e) => setSelected({ ...selected, title: e.target.value })} />
+                  <TextField fullWidth size="small" className="input2" type="text" name="description" value={selected.description} onChange={(e) => setSelected({ ...selected, description: e.target.value })} />
                 </div>
-                <button className="button" type="submit">Salvar</button>
+                <Button size="small" variant="contained" className="button" type="submit">Salvar</Button>
               </form>
             </> :
               <>
@@ -169,7 +171,7 @@ export default function App() {
               await deleteTodo({ variables: { id: todo.id } })
             }}><DeleteIcon /></button>
           </div>
-        </div>)
+        </Card>)
       }
     </div >
   )

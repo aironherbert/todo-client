@@ -35,9 +35,11 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
+    width: 80%;
 }
 
 .labels .input1{
+    border: none;
     font-size: 0.67em;
     margin-block-start: 2.33em;
     margin-block-end: 2.33em;

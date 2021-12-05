@@ -1,12 +1,14 @@
 import { useQuery, gql, useMutation } from '@apollo/client';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import EditIcon from '@material-ui/icons/Edit';
 import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@material-ui/icons/CheckBox';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { Button, Card, TextField } from '@material-ui/core';
+import styled from "@emotion/styled"
 
 import "./index.css";
+import ModalApp from './components/molecules/Modal';
 // import styled from '@emotion/styled';
 
 const GET_TODOS = gql`
@@ -83,6 +85,8 @@ export default function App() {
   const [deleteTodo] = useMutation(DELETE_TODO, { refetchQueries: [GET_TODOS, "todos"] });
   const [updateTodo] = useMutation(UPDATE_TODO);
 
+  const ref = useRef<HTMLInputElement>(null);
+
   const [state, setState] = useState("");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -134,7 +138,12 @@ export default function App() {
         }
       </div>
       {data?.todos.map((todo: Todo) =>
-        <Card key={todo.id} style={{ backgroundColor: todo.color, display: "flex", minWidth: "50%", borderRadius: "10px", justifyContent: "space-between", alignItems: "center", padding: "10px", position: "relative", marginBottom: "5px", opacity: `${todo.done ? "0.5" : "1"}` }}>
+        <Card onClick={(e) => {
+          if (e.currentTarget === e.target) {
+            setSelected(todo)
+            setState("editColor")
+          }
+        }} key={todo.id} style={{ backgroundColor: todo.color, display: "flex", minWidth: "50%", borderRadius: "10px", justifyContent: "space-between", alignItems: "center", padding: "10px", position: "relative", marginBottom: "5px", opacity: `${todo.done ? "0.5" : "1"}` }}>
           <div style={{ backgroundColor: "white", borderRadius: "10px", width: "100%", padding: "2px", marginRight: "5px" }}>
             {state === "edit" && todo.id === selected.id ? <>
               <form className="edit" onSubmit={async (event) => {
@@ -174,6 +183,19 @@ export default function App() {
           </div>
         </Card>)
       }
+      <ModalApp isOpen={state === "editColor"} onClose={() => setState("")}>
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+          <h3>Escolha a cor</h3>
+          <input ref={ref} style={{ height: "3.5rem" }} type="color" value={selected.color} onChange={(e) => {
+            setSelected({ ...selected, color: e.target.value })
+          }
+          } />
+          <Button style={{ marginTop: "10px" }} size="small" variant="contained" className="button" onClick={() => {
+            updateTodo({ variables: { id: selected.id, color: selected.color } })
+            setState("")
+          }}>Salvar</Button>
+        </div>
+      </ModalApp>
     </div >
   )
 

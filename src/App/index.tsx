@@ -5,7 +5,6 @@ import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@material-ui/icons/CheckBox';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { Button, Card, TextField } from '@material-ui/core';
-import styled from "@emotion/styled"
 
 import "./index.css";
 import ModalApp from './components/molecules/Modal';

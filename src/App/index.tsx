@@ -117,7 +117,7 @@ export default function App() {
       <div style={{ display: "flex", flexDirection: "column" }}>
         <Button variant="contained" style={{ marginBottom: "5px" }} onClick={() => setState(state === "create" ? "" : "create")}>{state === "create" ? "Fechar" : "Criar nova atividade"}</Button>
         {state === "create" &&
-          <Card className="create" style={{ display: "flex", justifyContent: "flex-start" }}>
+          <Card className="create" style={{ display: "flex", justifyContent: "flex-start", marginBottom: "5px" }}>
             <form onSubmit={(event) => {
               event.preventDefault();
               handleCreate();

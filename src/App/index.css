@@ -6,9 +6,7 @@
     border: 1px solid black;
     display: flex;
     flex-direction: column;
-    border-radius: 10px;
-    margin-bottom: 10px;
-
+    border-radius: 5px;
 }
 .create button{
     height: 30px;

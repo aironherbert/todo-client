@@ -115,7 +115,7 @@ export default function App() {
   return (
     <div className="container">
       <div style={{ display: "flex", flexDirection: "column" }}>
-        <Button variant="contained" style={{ marginBottom: "5px" }} color={`${state === "create" ? "error" : "primary"}`} onClick={() => setState(state === "create" ? "" : "create")}>{state === "create" ? "Fechar" : "Criar nova atividade"}</Button>
+        <Button variant="contained" style={{ marginBottom: "5px" }} color={`${state === "create" ? "error" : "secondary"}`} onClick={() => setState(state === "create" ? "" : "create")}>{state === "create" ? "Fechar" : "Criar nova atividade"}</Button>
         {state === "create" &&
           <Card className="create" style={{ display: "flex", justifyContent: "flex-start", marginBottom: "5px" }}>
             <form onSubmit={(event) => {

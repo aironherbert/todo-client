@@ -9,21 +9,6 @@ import { Button, Card, TextField } from '@material-ui/core';
 import "./index.css";
 import ModalApp from './components/molecules/Modal';
 import Login from './components/login';
-// import styled from '@emotion/styled';
-
-// const GET_TODOS = gql`
-//   query todos {
-//     todos{
-//       id
-//       title
-//       description
-//       insertedAt
-//       updatedAt
-//       color
-//       done
-//     }
-//   }
-// `;
 
 const GET_USER = gql`
   query user($name: String){
@@ -176,51 +161,59 @@ export default function App() {
           </Card>
         }
       </div>
-      {loading ? "Carregando..." : data?.profile?.todos?.map((todo: Todo) =>
-        <Card onClick={(e) => {
-          if (e.currentTarget === e.target) {
-            setSelected(todo)
-            setState("editColor")
-          }
-        }} key={todo.id} style={{ backgroundColor: todo.color, display: "flex", minWidth: "50%", borderRadius: "10px", justifyContent: "space-between", alignItems: "center", padding: "10px", position: "relative", marginBottom: "5px", opacity: `${todo.done ? "0.5" : "1"}` }}>
-          <div style={{ backgroundColor: "white", borderRadius: "10px", width: "100%", padding: "2px", marginRight: "5px" }}>
-            {state === "edit" && todo.id === selected.id ? <>
-              <form className="edit" onSubmit={async (event) => {
-                event.preventDefault();
-                await updateTodo({
-                  variables: {
-                    ...selected
-                  }
-                }).then(() => setState("")).catch(err => console.log(err));
-              }}>
-                <div className="labels">
-                  <TextField fullWidth size="small" autoFocus className="input1" type="text" name="title" value={selected.title} onChange={(e) => setSelected({ ...selected, title: e.target.value })} />
-                  <TextField fullWidth size="small" className="input2" type="text" name="description" value={selected.description} onChange={(e) => setSelected({ ...selected, description: e.target.value })} />
-                </div>
-                <Button size="small" variant="contained" className="button" type="submit">Salvar</Button>
-              </form>
-            </> :
-              <>
-                <h6 style={{ textDecoration: `${todo.done ? "line-through" : "none"}`, padding: "5px", margin: "0" }}>{todo.title}</h6>
-                <div style={{ textDecoration: `${todo.done ? "line-through" : "none"}`, padding: "5px" }}>{todo.description}</div>
-              </>}
-          </div>
+      {loading ? "Carregando..." : data?.profile?.todos?.map((todo: Todo) => {
+        const dateItem = new Date(todo.updatedAt);
+        const dateItemString = dateItem.toLocaleString('pt-BR');
 
-
-          <div style={{ display: "flex" }}>
-            <button onClick={async () => {
-              setSelected({ id: todo.id, title: todo.title, description: todo.description, color: todo.color, done: todo.done });
-              setState(state === "edit" ? "" : "edit");
-            }}><EditIcon /></button>
-            <button onClick={async () => {
-              await updateTodo({ variables: { id: todo.id, done: !todo.done } })
+        return (
+          <Card onClick={(e) => {
+            if (e.currentTarget === e.target) {
+              setSelected(todo)
+              setState("editColor")
             }
-            }>{todo.done ? <CheckBoxIcon /> : <CheckBoxOutlineBlankIcon />}</button>
-            <button onClick={async () => {
-              await deleteTodo({ variables: { id: todo.id } })
-            }}><DeleteIcon /></button>
-          </div>
-        </Card>)
+          }} key={todo.id} style={{ backgroundColor: todo.color, display: "flex", minWidth: "50%", borderRadius: "10px", justifyContent: "space-between", alignItems: "center", padding: "10px", position: "relative", marginBottom: "5px", opacity: `${todo.done ? "0.5" : "1"}` }}>
+            <div style={{ backgroundColor: "white", borderRadius: "10px", width: "100%", padding: "2px", marginRight: "5px" }}>
+              {state === "edit" && todo.id === selected.id ? <>
+                <form className="edit" onSubmit={async (event) => {
+                  event.preventDefault();
+                  await updateTodo({
+                    variables: {
+                      ...selected
+                    }
+                  }).then(() => setState("")).catch(err => console.log(err));
+                }}>
+                  <div className="labels">
+                    <TextField fullWidth size="small" autoFocus className="input1" type="text" name="title" value={selected.title} onChange={(e) => setSelected({ ...selected, title: e.target.value })} />
+                    <TextField fullWidth size="small" className="input2" type="text" name="description" value={selected.description} onChange={(e) => setSelected({ ...selected, description: e.target.value })} />
+                  </div>
+                  <Button size="small" variant="contained" className="button" type="submit">Salvar</Button>
+                </form>
+              </> :
+                <>
+                  <h6 style={{ textDecoration: `${todo.done ? "line-through" : "none"}`, padding: "5px", margin: "0" }}>{todo.title}</h6>
+                  <div style={{ textDecoration: `${todo.done ? "line-through" : "none"}`, padding: "5px" }}>{todo.description}</div>
+                </>}
+              <div style={{ position: "absolute", bottom: "2px", right: "10px", fontSize: "10px", fontWeight: 700, backgroundColor: "white", borderRadius: "2px", padding: "2px 4px" }}>{dateItemString}</div>
+            </div>
+
+
+            <div style={{ display: "flex" }}>
+              <button onClick={async () => {
+                setSelected({ id: todo.id, title: todo.title, description: todo.description, color: todo.color, done: todo.done });
+                setState(state === "edit" ? "" : "edit");
+              }}><EditIcon /></button>
+              <button onClick={async () => {
+                await updateTodo({ variables: { id: todo.id, done: !todo.done } })
+              }
+              }>{todo.done ? <CheckBoxIcon /> : <CheckBoxOutlineBlankIcon />}</button>
+              <button onClick={async () => {
+                await deleteTodo({ variables: { id: todo.id } })
+              }}><DeleteIcon /></button>
+            </div>
+          </Card>
+
+        )
+      })
       }
       <ModalApp title="Alterando" isOpen={state === "editColor"} onClose={() => setState("")}>
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>

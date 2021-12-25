@@ -32,7 +32,7 @@ const GET_USER = gql`
       name
       insertedAt
       updatedAt
-      todos(name: $name){
+      todos{
         id
         title
         description
@@ -145,6 +145,8 @@ export default function App() {
   if (!user || !data?.profile) return <Login setUser={setUser} user={user} />
   return (
     <div className="container">
+      <h1>Simple Todo List</h1>
+
       <div style={{ display: "flex", flexDirection: "column" }}>
         <div><h1>{user.name}
           <Button variant="contained" style={{ marginLeft: "10px" }} color="secondary" onClick={() => {

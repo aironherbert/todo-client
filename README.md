@@ -4,7 +4,9 @@ This app is written with React, Typescript, Material UI, and Apollo Client. The 
 
 The production version of this app can be found at [Airon Todo Client](https://airon-todo-client.netlify.app/).
 
-This app needs the server to be up and running. You can clone at [Airon Todo Server](https://github.com/aironherbert/todo).
+To run this app locally, you need the server to be also running on your machine. You can clone it at [Airon Todo Server](https://github.com/aironherbert/todo).
+
+You can also change the uri from Apollo Client to [Production Server App](https://misty-voice-2266.fly.dev/api). In this way you can run the frontend of the app locally, but keeping the server side at production.
 
 ## Available Scripts
 

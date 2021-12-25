@@ -149,13 +149,13 @@ export default function App() {
 
       <div style={{ display: "flex", flexDirection: "column" }}>
         <div><h1>{user.name}
-          <Button variant="contained" style={{ marginLeft: "10px" }} color="secondary" onClick={() => {
+          <Button variant="contained" style={{ marginLeft: "10px", backgroundColor: "red" }} color="secondary" onClick={() => {
             setState("")
             setUser({ id: undefined, name: undefined })
           }}>Sair</Button>
         </h1>
         </div>
-        <Button variant="contained" style={{ marginBottom: "5px" }} color={`${state === "create" ? "primary" : "secondary"}`} onClick={() => setState(state === "create" ? "" : "create")}>{state === "create" ? "Fechar" : "Criar nova atividade"}</Button>
+        <Button variant="contained" style={{ marginBottom: "5px" }} color={`${state === "create" ? "secondary" : "primary"}`} onClick={() => setState(state === "create" ? "" : "create")}>{state === "create" ? "Fechar" : "Criar nova atividade"}</Button>
         {state === "create" &&
           <Card className="create" style={{ display: "flex", justifyContent: "flex-start", marginBottom: "5px" }}>
             <form onSubmit={(event) => {

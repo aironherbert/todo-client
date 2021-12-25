@@ -2,7 +2,7 @@
 
 This app is written with React, Typescript, Material UI, and Apollo Client. The users are created automatically, and if the user already exists it simply load all the todos saved for this user. There is no authentication, although you can choose a user name that only you know.
 
-The production version of this app can be found at [https://airon-todo-client.netlify.app/] (Airon Todo Client).
+The production version of this app can be found at [Airon Todo Client](https://airon-todo-client.netlify.app/).
 
 ## Available Scripts
 

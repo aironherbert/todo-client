@@ -147,7 +147,7 @@ export default function App() {
     <div className="container">
       <div style={{ display: "flex", flexDirection: "column" }}>
         <div><h1>{user.name}
-          <Button variant="contained" style={{ marginLeft: "10px" }} color="error" onClick={() => {
+          <Button variant="contained" style={{ marginLeft: "10px" }} color="secondary" onClick={() => {
             setState("")
             setUser({ id: undefined, name: undefined })
           }}>Sair</Button>

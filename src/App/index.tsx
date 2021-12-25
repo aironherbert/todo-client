@@ -1,5 +1,5 @@
 import { useQuery, gql, useMutation } from '@apollo/client';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import EditIcon from '@material-ui/icons/Edit';
 import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@material-ui/icons/CheckBox';
@@ -8,28 +8,50 @@ import { Button, Card, TextField } from '@material-ui/core';
 
 import "./index.css";
 import ModalApp from './components/molecules/Modal';
+import Login from './components/login';
 // import styled from '@emotion/styled';
 
-const GET_TODOS = gql`
-  query todos {
-    todos{
+// const GET_TODOS = gql`
+//   query todos {
+//     todos{
+//       id
+//       title
+//       description
+//       insertedAt
+//       updatedAt
+//       color
+//       done
+//     }
+//   }
+// `;
+
+const GET_USER = gql`
+  query user($name: String){
+    profile(name: $name){
       id
-      title
-      description
+      name
       insertedAt
       updatedAt
-      color
-      done
+      todos(name: $name){
+        id
+        title
+        description
+        insertedAt
+        updatedAt
+        color
+        done        
+      }
     }
   }
-`;
+`
 
 const CREATE_TODO = gql`
-  mutation createTodo($title: String, $description: String, $color: String, $done: Boolean) {
-    createTodo(title: $title, description: $description, color: $color, done: $done) {
+  mutation createTodo($title: String, $description: String, $color: String, $done: Boolean, $userId: Int!){
+    createTodo(title: $title, description: $description, color: $color, done: $done, userId: $userId){
       id
       title
       description
+      userId
       insertedAt
       updatedAt
       color
@@ -78,11 +100,19 @@ interface Todo {
 
 export default function App() {
 
-  const { loading, error, data } = useQuery(GET_TODOS);
+  const [user, setUser] = useState<{ id: number | undefined, name: string | undefined }>({ id: undefined, name: undefined })
+  const { loading, error, data } = useQuery(GET_USER, { variables: { name: user.name } });
 
-  const [createTodo] = useMutation(CREATE_TODO, { refetchQueries: [GET_TODOS, "todos"] });
-  const [deleteTodo] = useMutation(DELETE_TODO, { refetchQueries: [GET_TODOS, "todos"] });
+  useEffect(() => {
+    if (data) {
+      setUser({ name: data?.profile?.name ?? undefined, id: data?.profile?.id ?? undefined })
+    }
+  }, [data, data?.profile])
+
+  const [createTodo] = useMutation(CREATE_TODO, { refetchQueries: [GET_USER, "profile"] });
+  const [deleteTodo] = useMutation(DELETE_TODO, { refetchQueries: [GET_USER, "profile"] });
   const [updateTodo] = useMutation(UPDATE_TODO);
+
 
   const ref = useRef<HTMLInputElement>(null);
 
@@ -101,7 +131,8 @@ export default function App() {
         title,
         description,
         color,
-        done: false
+        done: false,
+        userId: user.id
       }
     }).catch(err => console.log(err));
     setTitle("");
@@ -110,11 +141,18 @@ export default function App() {
     setState("")
   }
 
-  if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
+  if (!user || !data?.profile) return <Login setUser={setUser} user={user} />
   return (
     <div className="container">
       <div style={{ display: "flex", flexDirection: "column" }}>
+        <div><h1>{user.name}
+          <Button variant="contained" style={{ marginLeft: "10px" }} color="error" onClick={() => {
+            setState("")
+            setUser({ id: undefined, name: undefined })
+          }}>Sair</Button>
+        </h1>
+        </div>
         <Button variant="contained" style={{ marginBottom: "5px" }} color={`${state === "create" ? "primary" : "secondary"}`} onClick={() => setState(state === "create" ? "" : "create")}>{state === "create" ? "Fechar" : "Criar nova atividade"}</Button>
         {state === "create" &&
           <Card className="create" style={{ display: "flex", justifyContent: "flex-start", marginBottom: "5px" }}>
@@ -136,7 +174,7 @@ export default function App() {
           </Card>
         }
       </div>
-      {data?.todos.map((todo: Todo) =>
+      {loading ? "Carregando..." : data?.profile?.todos?.map((todo: Todo) =>
         <Card onClick={(e) => {
           if (e.currentTarget === e.target) {
             setSelected(todo)
@@ -182,7 +220,7 @@ export default function App() {
           </div>
         </Card>)
       }
-      <ModalApp isOpen={state === "editColor"} onClose={() => setState("")}>
+      <ModalApp title="Alterando" isOpen={state === "editColor"} onClose={() => setState("")}>
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
           <h3>Escolha a cor</h3>
           <input ref={ref} style={{ height: "3.5rem" }} type="color" value={selected.color} onChange={(e) => {

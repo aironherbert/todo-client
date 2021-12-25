@@ -2,29 +2,32 @@ import React from "react";
 
 import "./styles.css";
 
-function Modal({ children, shown, close }: { children: React.ReactNode; shown: boolean; close: () => void }) {
+function Modal({ children, shown, close, title }: { children: React.ReactNode; shown: boolean; close: () => void, title: string }) {
     return shown ? (
-        <div
-            className="modal-backdrop"
-            onClick={() => {
-                // close modal when outside of modal is clicked
-                close();
-            }}
-        >
+        <>
+            <h2>{title}</h2>
             <div
-                className="modal-content"
-                onClick={e => {
-                    // do not close modal if anything inside modal content is clicked
-                    e.stopPropagation();
+                className="modal-backdrop"
+                onClick={() => {
+                    // close modal when outside of modal is clicked
+                    close();
                 }}
             >
-                <button onClick={close}>Close</button>
-                {children}
+                <div
+                    className="modal-content"
+                    onClick={e => {
+                        // do not close modal if anything inside modal content is clicked
+                        e.stopPropagation();
+                    }}
+                >
+                    <button onClick={close}>Close</button>
+                    {children}
+                </div>
             </div>
-        </div>
+        </>
     ) : null;
 }
-export default function ModalApp({ children, isOpen, onClose }: { children: React.ReactNode, isOpen: boolean, onClose: () => void }) {
+export default function ModalApp({ children, isOpen, onClose, title }: { children: React.ReactNode, isOpen: boolean, onClose: () => void, title: string }) {
     return (
         <div className="modal-app">
             <Modal
@@ -32,6 +35,7 @@ export default function ModalApp({ children, isOpen, onClose }: { children: Reac
                 close={() => {
                     onClose();
                 }}
+                title={title}
             >
                 {children}
             </Modal>

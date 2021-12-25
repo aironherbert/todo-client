@@ -9,7 +9,8 @@ import {
 } from "@apollo/client";
 
 const client = new ApolloClient({
-  uri: 'https://misty-voice-2266.fly.dev/api',
+  // uri: 'https://misty-voice-2266.fly.dev/api',
+  uri: 'http://localhost:4000/api',
   cache: new InMemoryCache()
 });
 

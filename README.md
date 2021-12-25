@@ -4,6 +4,8 @@ This app is written with React, Typescript, Material UI, and Apollo Client. The 
 
 The production version of this app can be found at [Airon Todo Client](https://airon-todo-client.netlify.app/).
 
+This app needs the server to be up and running. You can clone at [Airon Todo Server](https://github.com/aironherbert/todo).
+
 ## Available Scripts
 
 In the project directory, you can run:

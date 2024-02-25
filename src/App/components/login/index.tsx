@@ -1,4 +1,11 @@
-import { Button, TextField } from "@material-ui/core";
+import {
+  Button,
+  FormControl,
+  FormHelperText,
+  Input,
+  InputLabel,
+  TextField,
+} from "@material-ui/core";
 import React, { useState } from "react";
 
 type UserType = {
@@ -25,30 +32,26 @@ export default function Login({
           e.preventDefault();
           setUser({ ...user, name });
         }}
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-        }}
       >
-        <TextField
-          fullWidth
-          size="small"
-          autoFocus
-          className="input1"
-          type="text"
-          name="title"
-          value={name}
-          onChange={(e) => setName(e.target.value ?? undefined)}
-        />
-        <Button
-          type="submit"
-          variant="contained"
-          color="primary"
-          style={{ marginTop: "10px" }}
-        >
-          Entrar
-        </Button>
+        <FormControl>
+          <TextField
+            label="Usuário"
+            autoFocus
+            required
+            name="login-name"
+            value={name}
+            onChange={(e) => setName(e.target.value ?? undefined)}
+          />
+
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            style={{ marginTop: "10px" }}
+          >
+            Entrar
+          </Button>
+        </FormControl>
       </form>
     </div>
   );

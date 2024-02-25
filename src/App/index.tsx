@@ -179,7 +179,14 @@ export default function App() {
     <div className="container">
       <h1>Simple Todo List</h1>
 
-      <div style={{ display: "flex", flexDirection: "column" }}>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          width: "100%",
+          alignItems: "center",
+        }}
+      >
         <div>
           <h1>
             {user.name}

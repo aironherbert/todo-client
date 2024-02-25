@@ -4,11 +4,12 @@ import EditIcon from "@material-ui/icons/Edit";
 import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@material-ui/icons/CheckBox";
 import DeleteIcon from "@material-ui/icons/Delete";
-import { Button, Card, TextField } from "@material-ui/core";
+import { Button, Card, CircularProgress, TextField } from "@material-ui/core";
 
 import "./index.css";
 import ModalApp from "./components/molecules/Modal";
 import Login from "./components/login";
+import usePersistentState from "../hooks/use-persistent-state";
 
 const GET_USER = gql`
   query user($name: String) {
@@ -108,10 +109,10 @@ interface Todo {
 }
 
 export default function App() {
-  const [user, setUser] = useState<{
-    id: number | undefined;
-    name: string | undefined;
-  }>({ id: undefined, name: undefined });
+  const [user, setUser] = usePersistentState<{
+    id?: number;
+    name?: string;
+  }>("user", { id: undefined, name: undefined });
   const { loading, error, data } = useQuery(GET_USER, {
     variables: { name: user.name },
   });
@@ -167,6 +168,12 @@ export default function App() {
   };
 
   if (error) return <p>Error: {error}</p>;
+  if (loading)
+    return (
+      <div style={{ textAlign: "center" }}>
+        <CircularProgress />;
+      </div>
+    );
   if (!user || !data?.profile) return <Login setUser={setUser} user={user} />;
   return (
     <div className="container">
@@ -463,3 +470,4 @@ export default function App() {
     </div>
   );
 }
+
